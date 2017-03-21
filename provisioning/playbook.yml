@@ -10,5 +10,5 @@
     - vars/main.yml
 
   roles:
-    - common
-    - geerlingguy.security
+    # - common
+    # - geerlingguy.security
