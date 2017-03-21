@@ -1,8 +1,31 @@
 ---
 # Security measures
-
 security_ssh_port: 22
-security_sudoers_passworded: deployer
+security_sudoers_passworded: deploy
 # Autoupdate mail settings used on Debian/Ubuntu only.
 security_autoupdate_mail_to: "mike555.95@gmail.com"
 security_autoupdate_mail_on_error: false
+
+# Firewall
+firewall_allowed_tcp_ports:
+  - "22"
+  - "25"
+  - "80"
+  - "443"
+  - "3306"
+
+# MySQL role instructions
+mysql_user_home: /home/deploy
+mysql_user_name: deploy
+mysql_user_password: deploy
+mysql_databases: 
+    - name: deploy
+mysql_users:
+    - name: deploy
+      password: deploy
+      priv: "*.*:ALL,GRANT"
+# Setting MariaDB as default
+mysql_packages:
+  - mariadb-client
+  - mariadb-server
+  - python-mysqldb

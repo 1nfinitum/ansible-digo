@@ -10,26 +10,30 @@
     - vars/main.yml
 
   pre_tasks:
-      - name: Add 'deploy' group
-        group: 
-          name: deploy
-          state: present
+      # - name: Add 'deploy' group
+      #   group: 
+      #     name: deploy
+      #     state: present
 
-      - name: Add user 'deploy'
-        user: 
-            name: deploy
-            state: present
-            createhome: yes
-            shell: /bin/bash
-            group: deploy
-            password: $6$rounds=656000$49G.PQKkbGk2ngY1$BUDsC3aQf3XXPpsU8.JPP94URmiYF21fbYdxU/K8G0iJstvc3EEVmrFW5K51b7q4J.qgliRV16O5tpMSjuXhY1
+      # - name: Add user 'deploy'
+      #   user: 
+      #       name: deploy
+      #       state: present
+      #       createhome: yes
+      #       shell: /bin/bash
+      #       group: deploy
+      #       password: $6$rounds=656000$49G.PQKkbGk2ngY1$BUDsC3aQf3XXPpsU8.JPP94URmiYF21fbYdxU/K8G0iJstvc3EEVmrFW5K51b7q4J.qgliRV16O5tpMSjuXhY1
 
-      - name: Add ssh-authentication key for deploy
-        authorized_key: 
-            key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
-            user: deploy
-            state: present
+      # - name: Add ssh-authentication key for deploy
+      #   authorized_key: 
+      #       key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+      #       user: deploy
+      #       state: present
 
   roles:
-    # - common
     # - geerlingguy.security
+    # - geerlingguy.firewall
+    # - geerlingguy.ntp
+      # - role: geerlingguy.mysql
+      #   become: yes
+    - geerlingguy.nginx
