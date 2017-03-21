@@ -2,4 +2,4 @@
 *.cache
 *.retry
 .vagrant/
-provisioning/roles/
+**/roles
