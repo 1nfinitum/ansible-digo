@@ -1,0 +1,8 @@
+---
+# Security measures
+
+security_ssh_port: 22
+security_sudoers_passworded: deployer
+# Autoupdate mail settings used on Debian/Ubuntu only.
+security_autoupdate_mail_to: "mike555.95@gmail.com"
+security_autoupdate_mail_on_error: false

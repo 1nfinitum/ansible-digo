@@ -1,0 +1,33 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Create new Droplet.
+      digital_ocean:
+        state: deleted
+        command: droplet
+        name: ansible-do
+        private_networking: yes
+        image_id: ubuntu-16-04-x32
+        size_id: 512mb
+        region_id: fra1
+        ssh_key_ids: 6743524
+        unique_name: yes
+      register: do
+    - name: debug var=do
+      debug: var=do
+    - name: Add new host to our inventory.
+      add_host:
+        name: "{{ do.droplet.networks.v4[1].ip_address }}"
+        groups: do
+      when: do.droplet is defined
+
+- hosts: do
+  remote_user: root
+  gather_facts: false
+
+  tasks:
+    - name: Wait for port 22 to become available.
+      local_action: "wait_for port=22 host={{ inventory_hostname }}"
