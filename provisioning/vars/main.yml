@@ -9,7 +9,6 @@ security_autoupdate_mail_on_error: false
 # Firewall
 firewall_allowed_tcp_ports:
   - "22"
-  - "25"
   - "80"
   - "443"
   - "3306"
