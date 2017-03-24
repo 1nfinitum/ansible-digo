@@ -6,4 +6,3 @@
 - src: geerlingguy.nginx
 - src: geerlingguy.php
 - src: geerlingguy.composer
-- src: geerlingguy.git
