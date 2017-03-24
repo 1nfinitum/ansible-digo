@@ -2,11 +2,19 @@
 - hosts: localhost
   connection: local
   gather_facts: false
+  vars_files:
+    - vars/safe.yml
+  vars_prompt:
+    - name: "server_status"
+      prompt: "Should server be 'present' or 'absent'?"
+      default: "present"
+      private: no
 
   tasks:
     - name: Create new Droplet.
       digital_ocean:
-        state: present
+        api_token: "{{ api_token }}"
+        state: "{{ server_status }}"
         command: droplet
         name: ansible-do
         private_networking: yes
@@ -18,28 +26,36 @@
       register: do
 
     - name: Check if machine was already created to choose the right user for provisioning.
-      set_fact: provisioning_user="deploy", ansible_become=true
+      set_fact: provisioning_user=deploy ansible_become=true python=/usr/bin/python
       when: do.changed == false
 
     - name: Add new host to our inventory.
       add_host:
         name: "{{ do.droplet.ip_address }}"
         groups: do
-        ansible_python_interpreter: "/usr/bin/python3"
+        ansible_python_interpreter: "{{ python | default('/usr/bin/python3') }}"
         ansible_user: "{{ provisioning_user | default('root') }}"
-        ansible_become: "{{ ansible_become | default('false') }}"
+        ansible_become: "{{ ansible_become | default('') }}"
         ansible_become_pass: "deploy"
+        user_pass: "{{ user_pass }}"
       when: do.droplet is defined
       changed_when: false
 
 - hosts: do
-  remote_user: "{{ ansible_user }}"
-  gather_facts: true
+  # remote_user: "{{ ansible_user }}"
+  gather_facts: false
 
   vars_files:
     - vars/main.yml
 
   pre_tasks:
+
+      - name: Wait for port 22 to become available.
+        local_action: "wait_for port=22 host={{ inventory_hostname }}"
+        when: ansible_user == 'root'
+
+      - name: Gathering facts.
+        setup:
 
       - name: Add 'deploy' group
         group: 
@@ -53,7 +69,7 @@
             createhome: yes
             shell: /bin/bash
             group: deploy
-            password: $6$rounds=656000$49G.PQKkbGk2ngY1$BUDsC3aQf3XXPpsU8.JPP94URmiYF21fbYdxU/K8G0iJstvc3EEVmrFW5K51b7q4J.qgliRV16O5tpMSjuXhY1
+            password: "{{ user_pass }}"
 
       - name: Add ssh-authentication key for deploy
         authorized_key: 
@@ -65,7 +81,8 @@
     - geerlingguy.security
     - geerlingguy.firewall
     - geerlingguy.ntp
-    - geerlingguy.mysql
+    - role: geerlingguy.mysql
+      ansible_python_interpreter: "/usr/bin/python"
     - geerlingguy.nginx
     - geerlingguy.php
     - geerlingguy.composer
