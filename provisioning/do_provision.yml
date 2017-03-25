@@ -1,4 +1,9 @@
 ---
+# LEMP server provisioning for DigitalOcean.
+#
+# @author 1nfinitum (Mykhaylo Kolesnik) (2017).
+
+---
 - hosts: localhost
   connection: local
   gather_facts: false
@@ -42,13 +47,21 @@
       changed_when: false
 
 - hosts: do
-  # remote_user: "{{ ansible_user }}"
   gather_facts: false
 
   vars_files:
     - vars/main.yml
 
   pre_tasks:
+
+      - name: Getting host machine's IP.
+        uri: 
+          url: "http://ipecho.net/plain"
+          return_content: yes
+        register: host_ip
+
+      - name: Setting MySQL allowed host ip.
+        set_fact: mysql_ip="{{ host_ip.content }}"
 
       - name: Wait for port 22 to become available.
         local_action: "wait_for port=22 host={{ inventory_hostname }}"

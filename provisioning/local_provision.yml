@@ -1,7 +1,7 @@
 ---
 # LEMP server provisioning.
 #
-# @author Mykhaylo Kolesnik (2017).
+# @author 1nfinitum (Mykhaylo Kolesnik) (2017).
 
 - hosts: lemp
   gather_facts: true
@@ -9,7 +9,12 @@
   vars_files:
     - vars/main.yml
 
+  vars:
+      - mysql_ip: 192.168.33.1
+
+
   pre_tasks:
+
       - name: Add 'deploy' group
         group: 
           name: deploy
@@ -36,6 +41,7 @@
     - geerlingguy.ntp
     - role: geerlingguy.mysql
       become: yes
+      tags: mysql
     - geerlingguy.nginx
     - geerlingguy.php
     - geerlingguy.composer
