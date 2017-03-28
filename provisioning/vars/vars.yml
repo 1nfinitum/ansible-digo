@@ -1,0 +1,3 @@
+---
+public_ssh_key_root: ""   # Enter your path to public ssh key, it can be absolute or relative to *_provision.yml files
+private_ssh_key_root: ""  # Enter your path to private ssh key, it can be absolute or relative to *_provision.yml files

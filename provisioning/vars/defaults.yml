@@ -1,0 +1,55 @@
+---
+# General
+droplet_name: ansible-do
+deploy_user: deploy
+mysql_user_pass: deploy
+user_pass: "$6$rounds=656000$49G.PQKkbGk2ngY1$BUDsC3aQf3XXPpsU8.JPP94URmiYF21fbYdxU/K8G0iJstvc3EEVmrFW5K51b7q4J.qgliRV16O5tpMSjuXhY1" # deploy
+
+# Security measures
+security_ssh_port: 22
+security_sudoers_passworded: "{{ deploy_user }}"
+
+# Firewall
+firewall_allowed_tcp_ports:
+  - "{{ security_ssh_port }}"
+  - "25"
+  - "80"
+  - "3306"
+
+# MySQL role instructions
+mysql_user_home: /home/"{{ deploy_user }}"
+mysql_user_name: "{{ deploy_user }}"
+mysql_user_password: "{{ mysql_user_pass }}"
+mysql_databases: 
+    - name: "{{ deploy_user }}"
+mysql_users:
+    - name: "{{ deploy_user }}"
+      password: "{{ mysql_user_pass }}"
+      priv: "*.*:ALL,GRANT"
+    - name: "{{ deploy_user }}"
+      password: "{{ mysql_user_pass }}"
+      priv: "*.*:ALL,GRANT"
+      host: "{{ mysql_ip }}"
+# Setting MariaDB as default
+mysql_packages:
+  - mariadb-client
+  - mariadb-server
+  - python-mysqldb
+
+# Configuring PHP
+php_webserver_daemon: nginx
+php_enable_php_fpm: true
+php_packages:
+  - php
+  - php-cli
+  - php-common
+  - php-gd
+  - php-imap
+  - php-ldap
+  - php-mbstring
+  - php-pdo
+  - php-pear
+  - php-xml
+  - php-xmlrpc
+  - php-fpm
+php_enable_apc: false
