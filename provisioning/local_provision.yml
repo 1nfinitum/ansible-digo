@@ -7,10 +7,11 @@
   gather_facts: true
 
   vars_files:
-    - vars/main.yml
+    - vars/defaults.yml
+    - vars/vars.yml
 
   vars:
-      - mysql_ip: 192.168.33.1
+      - mysql_ip: 192.168.33.1 
 
 
   pre_tasks:
@@ -27,13 +28,16 @@
             createhome: yes
             shell: /bin/bash
             group: deploy
-            password: $6$rounds=656000$49G.PQKkbGk2ngY1$BUDsC3aQf3XXPpsU8.JPP94URmiYF21fbYdxU/K8G0iJstvc3EEVmrFW5K51b7q4J.qgliRV16O5tpMSjuXhY1
+            password: "{{ user_pass }}"
 
       - name: Add ssh-authentication key for deploy
         authorized_key: 
-            key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+            key: "{{ lookup('file', '{{ public_ssh_key_root }}') }}"
             user: deploy
             state: present
+
+      - name: Set Ansible to use private key for connection, that corresponds `public_ssh_root`.
+        set_fact: ansible_ssh_private_key_file={{ private_ssh_key_root }}
 
   roles:
     - geerlingguy.security
@@ -41,7 +45,6 @@
     - geerlingguy.ntp
     - role: geerlingguy.mysql
       become: yes
-      tags: mysql
     - geerlingguy.nginx
     - geerlingguy.php
     - geerlingguy.composer

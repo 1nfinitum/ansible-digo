@@ -7,7 +7,8 @@
   connection: local
   gather_facts: false
   vars_files:
-    - vars/safe.yml
+    - vars/defaults.yml
+    - vars/vars.yml
   vars_prompt:
     - name: "server_status"
       prompt: "Should server be 'present' or 'absent'?"
@@ -15,17 +16,27 @@
       private: no
 
   tasks:
-    - name: Create new Droplet.
+
+    - name: Adding SSH key for authentication.
       digital_ocean:
-        api_token: "{{ api_token }}"
+        command: ssh
+        api_token: "{{ api_token | default('') }}"
+        state: present
+        name: "{{ droplet_name }}"
+        ssh_pub_key: "{{ lookup('file', '{{ public_ssh_key_root }}') }}"
+      register: ssh_key
+
+    - name: Creating/deleting droplet.
+      digital_ocean:
+        api_token: "{{ api_token | default('') }}"
         state: "{{ server_status }}"
         command: droplet
-        name: "{{ droplet_name | default('ansible-do') }}"
+        name: "{{ droplet_name }}"
         private_networking: yes
-        image_id: ubuntu-16-04-x32
+        image_id: ubuntu-16-04-x64
         size_id: 512mb
         region_id: fra1
-        ssh_key_ids: 6743524
+        ssh_key_ids: "{{ ssh_key.ssh_key.id }}"
         unique_name: yes
       register: do
 
@@ -36,15 +47,25 @@
     - wait_for:
         port: 22
         host: "{{ do.droplet.ip_address }}"
-      when: do.droplet is defined
+      when: do.droplet is defined and server_status != "absent" and do.changed == true
 
     - name: Adding DNS record in DigitalOcean.
       digital_ocean_domain:
-        api_token: "{{ api_token }}" 
-        name: check-site.tk
+        api_token: "{{ api_token | default('') }}" 
+        name: "{{ domain_name }}"
         state: "{{ server_status }}"
         ip: "{{ do.droplet.ip_address }}"
-      when: do.droplet is defined
+      when: domain_name is defined and do.changed == true and server_status != "absent"
+
+    - name: Deleting DNS record from DigitalOcean.
+      digital_ocean_domain:
+        api_token: "{{ api_token | default('') }}" 
+        name: "{{ domain_name }}"
+        state: "{{ server_status }}"
+      when: domain_name is defined and server_status == "absent"
+
+    - name: Retrieve host ip
+      ipify_facts:
 
     - name: Add new host to our inventory.
       add_host:
@@ -54,34 +75,21 @@
         ansible_user: "{{ provisioning_user | default('root') }}"
         ansible_become: "{{ ansible_become | default('') }}"
         ansible_become_pass: "deploy"
+        ansible_ssh_private_key_file: "{{ private_ssh_key_root }}"
         user_pass: "{{ user_pass }}"
-      when: do.droplet is defined
+        mysql_ip: "{{ ipify_public_ip }}"
+        ansible_port: "{{ security_ssh_port }}"
+      when: do.droplet is defined and server_status != "absent"
       changed_when: false
 
 - hosts: do
-  gather_facts: false
+  gather_facts: true
 
   vars_files:
-    - vars/main.yml
+    - vars/defaults.yml
+    - vars/vars.yml
 
   pre_tasks:
-
-      - name: Getting host machine's IP.
-        uri: 
-          url: "http://ipecho.net/plain"
-          return_content: yes
-        register: host_ip
-
-      - name: Setting MySQL allowed host ip.
-        set_fact: mysql_ip="{{ host_ip.content }}"
-
-      - name: Wait for port 22 to become available.
-        local_action: "wait_for port=22 host={{ inventory_hostname }}"
-        when: ansible_user == 'root'
-
-      - name: Gathering facts.
-        setup:
-
       - name: Add 'deploy' group
         group: 
           name: deploy
@@ -98,16 +106,19 @@
 
       - name: Add ssh-authentication key for deploy
         authorized_key: 
-            key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+            key: "{{ lookup('file', '{{ public_ssh_key_root }}') }}"
             user: deploy
             state: present
 
-  roles:
-    - geerlingguy.security
-    - geerlingguy.firewall
-    - geerlingguy.ntp
-    - role: geerlingguy.mysql
-      ansible_python_interpreter: "/usr/bin/python"
-    - geerlingguy.nginx
-    - geerlingguy.php
-    - geerlingguy.composer
+      - name: Set Ansible to use private key for connection, that corresponds `public_ssh_root`.
+        set_fact: ansible_ssh_private_key_file={{ private_ssh_key_root }}
+
+  # roles:
+  #   - geerlingguy.security
+  #   - geerlingguy.firewall
+  #   - geerlingguy.ntp
+  #   - role: geerlingguy.mysql
+  #     ansible_python_interpreter: "/usr/bin/python"
+  #   - geerlingguy.nginx
+  #   - geerlingguy.php
+  #   - geerlingguy.composer
