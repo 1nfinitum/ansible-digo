@@ -1,0 +1,8 @@
+---
+- src: geerlingguy.security
+- src: geerlingguy.firewall
+- src: geerlingguy.ntp
+- src: geerlingguy.mysql
+- src: geerlingguy.nginx
+- src: geerlingguy.php
+- src: geerlingguy.composer
