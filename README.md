@@ -1,12 +1,13 @@
 # Ansible DigitalOcean/Vagrant LEMP stack provisioning
 
 ## Intro
-This playbook can be used to quickly build/rebuild virtual servers located either on your local computer or on the remote DigitalOcean droplet. In case of DigitalOcean provisioning it creates a dynamic inventory, so there is no necessity to configure your Ansible connection.
+This playbook can be used to quickly build/rebuild/destroy virtual servers located either on your local computer or on the remote DigitalOcean droplet. In case of DigitalOcean provisioning it creates a dynamic inventory, so there is no necessity to configure your Ansible connection.
 
 This playbook:
 * Creates default "deploy" user
 * Installs NTP, Nginx, PHP, MySQL, Composer
 * Configures base security measures (disables remote `root` login and others)
+* Connects DigitalOcean droplet to domain name
 
 ## Requirements
 To use this playbook, you will need to have done the following:
@@ -34,6 +35,7 @@ To provision your droplet just `cd` into the provisioning directory and run `ans
 
 To log into your server via SSH run `ssh -i /path/to/your/public_ssh_key deploy@%created_droplet_ip%`.
 
+If you have domain directed on DigitalOcean's rDNS you can also connect it to your droplet, all you need is to add `domain_name` variable to `vars/vars.yml` file.
 ## Variables
 
 There are default variables in `vars/defaults.yml` file which can be overwritten in `vars/vars.yml` file.
@@ -44,6 +46,10 @@ There are default variables in `vars/defaults.yml` file which can be overwritten
 - `public_ssh_key_root` - path to your public ssh key (absolute or relative to `*_provision.yml` file).
 
 ### Other variables
+```
+domain_name: ""
+```
+You can connect your own domain name to the DigitalOcean droplet if you will just declare this variable with your own domain name. Don't forget that you have previously to [direct](https://www.digitalocean.com/community/tutorials/how-to-point-to-digitalocean-nameservers-from-common-domain-registrars) your domain provider's DNS on DigitalOcean's DNS.
 ```
 droplet_name: ""
 ```
