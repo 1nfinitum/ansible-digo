@@ -56,3 +56,50 @@ Name of user, which would be the main operating one, included in `sudoers` file 
 user_pass: ""
 ```
 The default password for `deploy` is also `deploy` if you would like to change it, you should put it in this document previously hashed it with SHA-512, this [instruction](http://docs.ansible.com/ansible/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module) will help you to deal with it.
+```
+mysql_user_pass: ""
+```
+Pass that will be used for connections to MariaDB database, default value is `deploy`.
+```
+security_ssh_port: ""
+```
+Here you can choose your prefered port for ssh connections, the default one is `22`. If you are going to change it - also change `ansible_ssh_port` variable in `inventory_for_vagrant` file.
+```
+firewall_allowed_tcp_ports: []
+```
+Here you can write down list of ports will be exposed for connection, the default ports are `25, 80, 3306` and port mentioned in `security_ssh_port` used for SSH connections.
+```
+mysql_packages: []
+```
+List of packages which be installed for mysql, default packages are the ones that install MariaDB.
+```
+php_packages: []
+```
+List of PHP packages that will be installed.
+```
+php_webserver_daemon: nginx
+php_enable_php_fpm: true
+```
+Variables for configuration of Nginx and PHP communication.
+
+Other variables you can find in docs for the next roles from [Geerlingguy's github](https://github.com/geerlingguy):
+```
+geerlingguy.security
+geerlingguy.firewall
+geerlingguy.ntp
+geerlingguy.mysql
+geerlingguy.nginx
+geerlingguy.php
+geerlingguy.composer
+```
+## Example vars.yml
+
+```
+---
+public_ssh_key_root: "~/.ssh/id_rsa.pub"
+private_ssh_key_root: "~/.ssh/id_rsa"
+```
+## License
+MIT
+## Author Information
+This role was created in 2017 by [Mykhaylo Kolesnik](http://github.com/1nfinitum).
