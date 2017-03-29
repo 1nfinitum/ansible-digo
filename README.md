@@ -1,7 +1,7 @@
 # Ansible DigitalOcean/Vagrant LEMP stack provisioning
 
 ## Intro
-This playbook can be used to quickly build/rebuild/destroy virtual servers located either on your local computer or on the remote DigitalOcean droplet. In case of DigitalOcean provisioning it creates a dynamic inventory, so there is no necessity to configure your Ansible connection.
+This playbook can be used to quickly build/rebuild/destroy virtual servers located either on your local computer or on the remote DigitalOcean droplet and based on CentOS 6 or Ubuntu 16.04 LTS, depending on your favors. In case of DigitalOcean provisioning it creates a dynamic inventory, so there is no necessity to configure your Ansible connection.
 
 This playbook:
 * Creates default "deploy" user
@@ -20,10 +20,11 @@ If you will be using Vagrant local provisioning you should also do the following
 1. Download and Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 2. Download and Install [Vagrant](https://www.vagrantup.com/downloads.html)
 
-
 ## Usage
 
 ### Vagrant
+Default distribution used in `Vagrantfile` is `geerlingguy/centos6` (CentOS 6). If you want to run with Ubuntu 16.04 LTS - just change the distribution in line `config.vm.box = "geerlingguy/centos6"` to `geerlingguy/ubuntu1604` and then accomplish the following steps. As it playbook is supposed to work with most Debian/RedHat distributions - feel free to try some other OS with it. 
+
 To provision your local environment you can simply type `vagrant up` (in the directory containing `Vagrantfile`) and wait until Vagrant will create a new VM, install the base box, and configure it.
 
 Once the Vagrant VM is up and runing (after `vagrant up` is complete and you're back at the command prompt), you can log into via SSH with `vagrant ssh` or with `ssh -i ~/.vagrant.d/insecure_private_key deploy@192.168.33.34`. 
@@ -46,6 +47,10 @@ There are default variables in `vars/defaults.yml` file which can be overwritten
 - `public_ssh_key_root` - path to your public ssh key (absolute or relative to `*_provision.yml` file).
 
 ### Other variables
+```
+distro: ""
+```
+You can choose what distribution to use while provisioning. The default is `centos-6-x32` meaning that is CentOS 6 x32 distribution according to the image list retrieves from [DigitalOcean API](https://developers.digitalocean.com/documentation/v2/#list-all-images). This playbook was also tested with `ubuntu-16-04-x64` (Ubuntu 16.04 LTS x64) distribution. It also supposes to work with most Debian/RedHat based OS, just have a try.
 ```
 domain_name: ""
 ```
