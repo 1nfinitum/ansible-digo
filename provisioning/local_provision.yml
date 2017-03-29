@@ -39,6 +39,20 @@
       - name: Set Ansible to use private key for connection, that corresponds `public_ssh_root`.
         set_fact: ansible_ssh_private_key_file={{ private_ssh_key_root }}
 
+      - name: Set Centos6 required variables
+        set_fact: mysql_enablerepo=remi php_enablerepo=remi
+        when: ansible_os_family == "RedHat"
+
+      - name: Include Centos6 Remi repo role if needed
+        include_role:
+            name: geerlingguy.repo-remi
+        when: ansible_os_family == "RedHat"
+
+      - name: Include Centos6 Epel repo role if needed
+        include_role:
+            name: geerlingguy.repo-epel        
+        when: ansible_os_family == "RedHat"
+
   roles:
     - geerlingguy.security
     - geerlingguy.firewall

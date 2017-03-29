@@ -2,6 +2,7 @@
 # General
 droplet_name: ansible-do
 deploy_user: deploy
+distro: "centos-6-x32"
 mysql_user_pass: deploy
 user_pass: "$6$rounds=656000$49G.PQKkbGk2ngY1$BUDsC3aQf3XXPpsU8.JPP94URmiYF21fbYdxU/K8G0iJstvc3EEVmrFW5K51b7q4J.qgliRV16O5tpMSjuXhY1" # deploy
 
@@ -17,7 +18,7 @@ firewall_allowed_tcp_ports:
   - "3306"
 
 # MySQL role instructions
-mysql_user_home: /home/"{{ deploy_user }}"
+mysql_user_home: "/home/{{ deploy_user }}"
 mysql_user_name: "{{ deploy_user }}"
 mysql_user_password: "{{ mysql_user_pass }}"
 mysql_databases: 
@@ -30,11 +31,6 @@ mysql_users:
       password: "{{ mysql_user_pass }}"
       priv: "*.*:ALL,GRANT"
       host: "{{ mysql_ip }}"
-# Setting MariaDB as default
-mysql_packages:
-  - mariadb-client
-  - mariadb-server
-  - python-mysqldb
 
 # Configuring PHP
 php_webserver_daemon: nginx
