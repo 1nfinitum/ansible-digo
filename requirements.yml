@@ -1,10 +1,6 @@
 ---
-- src: geerlingguy.security
-- src: geerlingguy.firewall
-- src: geerlingguy.ntp
-- src: geerlingguy.mysql
-- src: geerlingguy.nginx
-- src: geerlingguy.php
-- src: geerlingguy.composer
-- src: geerlingguy.repo-epel  
-- src: geerlingguy.repo-remi  
+- src: 1nfinitum.users
+- src: 1nfinitum.security
+- src: 1nfinitum.nginx
+- src: 1nfinitum.php
+- src: 1nfinitum.mysql
