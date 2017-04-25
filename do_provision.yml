@@ -1,7 +1,6 @@
 # LEMP server provisioning for DigitalOcean.
 #
 # @author 1nfinitum (Mykhaylo Kolesnik) (2017).
-
 ---
 - hosts: localhost
   connection: local
@@ -16,7 +15,6 @@
       private: no
 
   tasks:
-
     - name: Adding SSH key for authentication.
       digital_ocean:
         command: ssh
@@ -70,34 +68,22 @@
         groups: do
         ansible_python_interpreter: "{{ python | default('/usr/bin/python3') }}"
         ansible_user: "{{ provisioning_user | default('root') }}"
-        ansible_become: "{{ ansible_become | default('') }}"
-        ansible_become_pass: "deploy"
+        # ansible_become: "{{ ansible_become | default('') }}"
+        ansible_become_pass: "jz"
         ansible_ssh_private_key_file: "{{ private_ssh_key_root }}"
-        user_pass: "{{ user_pass }}"
         ansible_port: "{{ security_ssh_port|d('22') }}"
       when: do.droplet is defined and server_status != "absent"
       changed_when: false
 
 - hosts: do
   gather_facts: false
+  become: yes
   vars_files:
     - vars/defaults.yml
     - vars/vars.yml
+
   roles:
     - 1nfinitum.users
-
-- hosts: do
-  gather_facts: false
-
-  vars_files:
-    - vars/defaults.yml
-    - vars/vars.yml
-
-  pre_tasks:
-      - name: Set Ansible to use private key for connection, that corresponds `public_ssh_root`.
-        set_fact: ansible_ssh_private_key_file={{ private_ssh_key_root }}
-
-  roles:
     - 1nfinitum.security
     - 1nfinitum.nginx
     - 1nfinitum.php

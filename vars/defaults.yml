@@ -1,6 +1,6 @@
 ---
 # General
-droplet_name: ansible-do
+droplet_name: ansible-digo
 user_name: 'jz'
 user_pass: '$6$rounds=656000$Mm/I03NQz.7tbRgG$nl/O8Z4F8FK/2MW7ZvoawHXEzB87ftzhmK3a1ikDzDStiL1z6pZAlt1DQN5PEqW9UosB7Nq.8lW9n9qEJR3ML1' # jz
 mysql_user_name: 'jz'
@@ -8,11 +8,11 @@ mysql_user_pass: 'jz'
 
 # Users Role instructions
 users_add:
-  - name: "{{ user_name }}"
-    pass: "{{ user_pass }}"
+  - user: "{{ user_name }}"
+    password: "{{ user_pass }}"
     sudoer: true
     ssh_pub_key:
-      - "{{ public_ssh_key_root }}"
+      - "{{ lookup('file', '{{ public_ssh_key_root }}') }}"
 
 # MySQL role instructions
 mysql_users:
