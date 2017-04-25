@@ -6,7 +6,7 @@ This playbook can be used to quickly build/rebuild/destroy virtual servers locat
 ## Requirements
 To use this playbook, you will need to have done the following:
 1. Install [Ansible](http://docs.ansible.com/intro_installation.html), Ansible 2.2+ is required.
-2. Open a shell prompt (Terminal app on Mac) and cd into the folder containing `Vagrantfile`.
+2. Open a shell prompt (Terminal app on Mac) and cd into the cloned folder.
 3. Run the following command to install the necessary Ansible roles for this profile: `$ ansible-galaxy install -r requirements.yml`
 4. [Create](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2) your ssh key pair and fill their paths into `public_ssh_key_root` and `private_ssh_key_root` variables (they can be both absolute or relative to the `do_provision.yml` file location).
 
