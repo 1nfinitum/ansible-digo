@@ -1,0 +1,15 @@
+- hosts: digo
+  gather_facts: false
+  become: yes
+  vars_files:
+    - vars/defaults.yml
+    - vars/vars.yml
+
+  roles:
+    - tenequm.users
+    - tenequm.security
+    - tenequm.firewall
+    - tenequm.nginx
+    - tenequm.php
+    - role: tenequm.mysql
+      ansible_python_interpreter: "/usr/bin/python"

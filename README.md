@@ -11,8 +11,18 @@ To use this playbook, you will need to have done the following:
 4. Run the following command to install the necessary Ansible roles for this profile: `$ ansible-galaxy install -r requirements.yml`
 5. [Create](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2) your ssh key pair and fill their paths into `public_ssh_key_root` and `private_ssh_key_root` variables (they can be both absolute or relative to the `do_provision.yml` file location).
 
+If you will be using Vagrant local provisioning you should also do the following:
+1. Download and Install [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
+2. Download and Install [Vagrant](https://www.vagrantup.com/downloads.html)
+
 ## Usage
 
+### Vagrant
+To provision your local environment you can simply type `vagrant up` (in the directory containing `Vagrantfile`) and wait until Vagrant will create a new VM, install the base box, and configure it.
+
+Once the Vagrant VM is up and runing (after `vagrant up` is complete and you're back at the command prompt), you can log into via SSH with `vagrant ssh` or with `ssh -i ~/.vagrant.d/insecure_private_key jz@192.168.77.77`. 
+
+### DigitalOcean
 You should know your `API token` from your DigitalOcean [account](https://cloud.digitalocean.com/droplets) and add it to `vars.yml` file in `vars` directory, or add it to `DO_API_TOKEN` environment variable.
 
 To provision your droplet just `cd` into your cloned directory and run `ansible-playbook do-provision.yml`, then you will be asked if you want your machine to be `present` (created) or `absent` (deleted) and just wait till everything is done with ansible.
