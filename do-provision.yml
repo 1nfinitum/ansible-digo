@@ -1,6 +1,6 @@
 # LEMP server provisioning for DigitalOcean.
 #
-# @author 1nfinitum (Mykhaylo Kolesnik) (2017).
+# @author tenequm (Mykhaylo Kolesnik) (2017).
 ---
 - hosts: localhost
   connection: local
@@ -83,9 +83,9 @@
     - vars/vars.yml
 
   roles:
-    - 1nfinitum.users
-    - 1nfinitum.security
-    - 1nfinitum.nginx
-    - 1nfinitum.php
-    - role: 1nfinitum.mysql
+    - tenequm.users
+    - tenequm.security
+    - tenequm.nginx
+    - tenequm.php
+    - role: tenequm.mysql
       ansible_python_interpreter: "/usr/bin/python"

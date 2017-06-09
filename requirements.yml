@@ -1,6 +1,6 @@
 ---
-- src: 1nfinitum.users
-- src: 1nfinitum.security
-- src: 1nfinitum.nginx
-- src: 1nfinitum.php
-- src: 1nfinitum.mysql
+- src: tenequm.users
+- src: tenequm.security
+- src: tenequm.nginx
+- src: tenequm.php
+- src: tenequm.mysql

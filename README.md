@@ -60,7 +60,7 @@ security_ssh_port: ""
 ```
 Here you can choose your prefered port for ssh connections, the default one is `22`. If you are going to change it - also change `ansible_ssh_port` variable in `inventory_for_vagrant` file.
 
-Other variables you can find in docs for the next roles from [1nfinitum's github](https://github.com/1nfinitum):
+Other variables you can find in docs for the next roles from [tenequm's github](https://github.com/tenequm):
 
 ## Example vars.yml
 ```
@@ -71,4 +71,4 @@ private_ssh_key_root: "~/.ssh/id_rsa"
 ## License
 MIT
 ## Author Information
-This role was created in 2017 by [Mykhaylo Kolesnik](http://github.com/1nfinitum).
+This role was created in 2017 by [Mykhaylo Kolesnik](http://github.com/tenequm).
