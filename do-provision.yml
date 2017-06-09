@@ -85,6 +85,7 @@
   roles:
     - tenequm.users
     - tenequm.security
+    - tenequm.firewall
     - tenequm.nginx
     - tenequm.php
     - role: tenequm.mysql

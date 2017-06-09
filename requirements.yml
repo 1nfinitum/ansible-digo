@@ -1,6 +1,7 @@
 ---
 - src: tenequm.users
 - src: tenequm.security
+- src: tenequm.firewall
 - src: tenequm.nginx
 - src: tenequm.php
 - src: tenequm.mysql
